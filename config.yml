@@ -1,0 +1,4 @@
+listeners: 4
+message_cliente:
+  connection_url: localhost
+  queue: clustering

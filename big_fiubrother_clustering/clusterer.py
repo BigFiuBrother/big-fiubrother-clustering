@@ -13,7 +13,6 @@ class Clusterer:
         sleep(self.interval_time)
 
         self.__update_batch()
-
         clt = DBSCAN(metric='euclidean', n_jobs=self.clustering_jobs)
         clt.fit(encodings)
 

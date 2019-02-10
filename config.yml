@@ -1,4 +1,7 @@
-listeners: 4
-message_cliente:
+listener_threds: 4
+rabbitmq_subscriber_client:
   connection_url: localhost
   queue: clustering
+rabbitmq_publisher_client:
+  connection_url: localhost
+  exchange: clustering_results

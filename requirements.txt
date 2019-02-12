@@ -1,3 +1,4 @@
 big-fiubrother-core
 scikit-learn
+hdbscan
 pika

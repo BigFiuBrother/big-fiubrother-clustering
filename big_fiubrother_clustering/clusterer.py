@@ -1,34 +1,21 @@
-from time import sleep
+import hdbscan
 
 class Clusterer:
 
-	def __init__(self, queue, settings):
-       self.queue = queue
-       self.interval_time = settings['interval_time']
-       self.max_faces = settings['max_faces']
-       self.clustering_jobs = settings['jobs']
-       self.current_batch = []
+	def __init__(self, settings):
+       self.jobs = settings['jobs']
+       self.metric = settings['metric']
+       self.min_cluster_size = settings['min_cluster_size']
+       self.min_samples = settings['min_samples']
 
-    def start():
-        sleep(self.interval_time)
-
-        self.__update_batch()
-        clt = DBSCAN(metric='euclidean', n_jobs=self.clustering_jobs)
-        clt.fit(encodings)
-
-        #TODO: Inform of groups found
+    def analyse(self, batch):
+        #TODO: Check batch size
         
-    def __update_batch(self):
-        queued_faces = self.queue.qsize()
-        
-        if queued_faces > self.max_faces:
-            self.current_batch = []
-            faces_to_take = self.max_faces
-        else:
-            remove_from_batch = len(self.current_batch) + queued_faces - self.max_faces
-            if remove_from_batch > 0: 
-                del self.current_batch[:queued_faces]
-            faces_to_take = queued_faces 
+        clusterer = hdbscan.HDBSCAN(metric=self.metric, 
+                                    core_dist_n_jobs=self.jobs,
+                                    min_cluster_size=self.min_cluster_size,
+                                    min_samples=self.min_samples)
 
-        for i in range(0, faces_to_take):
-            self.current_batch.append(self.queue.get())
+        clusterer.fit(batch)
+
+        #TODO: Create clustering result

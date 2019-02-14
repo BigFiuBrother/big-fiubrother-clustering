@@ -15,8 +15,8 @@ class Timer:
 
     def start(self, time):
         self.start_time = datetime.now()
-        self.running = True
         self.thread.start()
+        self.running = True
         self.thread.join()
 
     def time_until_finished(self):

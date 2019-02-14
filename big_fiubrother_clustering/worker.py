@@ -1,7 +1,32 @@
-from big_fiubrother_clustering.rabbitmq_subscriber import RabbitMQSubscriber
-from big_fiubrother_clustering.message_listener import MessageListener
+from big_fiubrother_clustering import *
 from queue import Queue
-import threading
+
+class Worker:
+
+    def __init__(self, settings):
+        self.subscriber_client = RabbitMQSubscriber(settings['rabbitmq_subscriber_client'])
+        self.publisher_client = RabbitMQPublisher(settings['rabbitmq_publisher_client'])
+        self.thread_queue = Queue()
+
+        self.clustering_thread = ClusteringThread(self.thread_queue, self.publisher_client, settings['clustering'])
+
+        self.listener_threads = []
+
+        for i in settings['listener_threads']:
+            thread = ListenerThread(self.subscriber_client, self.thread_queue)
+            self.listener_threads.append(thread)
+
+    def start(self):
+        self.clustering_thread.start()
+
+        for thread in self.listener_threads:
+            thread.start()
+
+        for thread in self.listener_threads:
+            thread.join()
+
+        self.clustering_thread.join()
+
 
 if __name__ == "__main__":
     print('[*] Configuring big-fiubrother-clustering')
@@ -9,16 +34,6 @@ if __name__ == "__main__":
     with open('config.yml') as config_file:
         settings = yaml.load(config_file)
 
-    subscriber_client = RabbitMQSubscriber(settings['rabbitmq_subscriber_client'])
-    clustering_queue = Queue()
-
-    threads = []
-
-    for i in range(0, settings['listener_threads']):
-        message_listener = ListenerThread(subscriber_client, clustering_queue)
-        thread = threading.Thread(target=message_listener.start)
-        threads.append(thread)
-        thread.start()
-
-
+    worker = Worker(settings)
+    worker.start()
     

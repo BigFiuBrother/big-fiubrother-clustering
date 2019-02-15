@@ -21,4 +21,9 @@ class RabbitMQSubscriber:
 
     def stop(self):
         self.channel.stop_consuming()
-        self.connection.close()
+
+    def close(self):
+        try:
+            self.connection.close()
+        except pika.exceptions.ConnectionClosed:
+            logging.warning('Connection already closed')

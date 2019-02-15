@@ -1,7 +1,17 @@
-listener_threds: 4
+listener_threads: 2
 rabbitmq_subscriber_client:
   connection_url: localhost
   queue: clustering
 rabbitmq_publisher_client:
   connection_url: localhost
   exchange: clustering_results
+clustering:
+  clusterer:
+    jobs: 4
+    metric: euclidean
+    min_cluster_size: 20
+    min_samples: 40
+  timer:
+    interval_time: 60 # seconds
+  batch:
+    max_size: 1000

@@ -14,11 +14,13 @@ class Worker:
 
         self.listener_threads = []
 
-        for i in settings['listener_threads']:
+        for _ in settings['listener_threads']:
             thread = ListenerThread(self.subscriber_client, self.thread_queue)
             self.listener_threads.append(thread)
 
     def run(self):
+        print('[*] Starting clustering worker')
+        
         self.clustering_thread.start()
 
         for thread in self.listener_threads:
@@ -33,16 +35,19 @@ class Worker:
         self.publisher_client.close()
 
     def __stop_threads(self):
+        print('[*] Stopping clustering worker')
+
         for thread in self.listener_threads:
             thread.stop()
 
         self.clustering_thread.stop()
 
 if __name__ == "__main__":
-    print('[*] Configuring big-fiubrother-clustering')
+    print('[*] Configuring clustering worker')
 
     with open('config.yml') as config_file:
         settings = yaml.load(config_file)
 
     worker = Worker(settings)
+
     worker.run()

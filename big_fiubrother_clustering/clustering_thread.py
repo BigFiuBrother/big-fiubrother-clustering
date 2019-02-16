@@ -23,9 +23,9 @@ class ClusteringThread:
     def __start(self):
         while self.running:
             if self.timer.is_finished:
-                clustering_result = self.clusterer.analyse(batch)
-                if clustering_result.clusters_found:
-                    self.output_queue.send(clustering_result)
+                clusters_message = self.clusterer.analyse(batch)
+                if not clusters_message.is_empty:
+                    self.output_queue.send(clusters_message)
                 self.timer.start()
             else:
                 try:

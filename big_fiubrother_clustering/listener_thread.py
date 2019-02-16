@@ -1,3 +1,4 @@
+from big_fiubrother_clustering import Face
 import threading
 
 class ListenerThread:
@@ -15,7 +16,9 @@ class ListenerThread:
         self.input_queue.start(self.__forward_message)
 
     def __forward_message(self, message):
-        self.output_queue.put(message)
+        unknown_face_message = message.decode()
+        face = Face(unknown_face_message.id, unknown_face_message.face_embedding)
+        self.output_queue.put(face)
 
     def stop(self):
         self.input_queue.stop()

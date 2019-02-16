@@ -1,6 +1,7 @@
 from big_fiubrother_clustering.batch import Batch
 from big_fiubrother_clustering.clusterer import Clusterer
 from big_fiubrother_clustering.clustering_thread import ClusteringThread
+from big_fiubrother_clustering.face import Face
 from big_fiubrother_clustering.listener_thread import ListenerThread
 from big_fiubrother_clustering.rabbitmq_publisher import RabbitMQPublisher
 from big_fiubrother_clustering.rabbitmq_subscriber import RabbitMQSubscriber

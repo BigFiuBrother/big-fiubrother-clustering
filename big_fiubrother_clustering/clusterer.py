@@ -1,3 +1,6 @@
+from big_fiubrother_core.messages import ClustersMessage
+from collections import defaultdict
+import numpy as np
 import hdbscan
 
 class Clusterer:
@@ -16,6 +19,14 @@ class Clusterer:
                                     min_cluster_size=self.min_cluster_size,
                                     min_samples=self.min_samples)
 
-        clusterer.fit(batch)
+        clusterer.fit(batch.embeddings)
 
-        #TODO: Create clustering result
+        new_clusters = defaultdict(list)
+
+        for label, probabilty, face in zip(clusterer.labels_, batch.faces):
+            if  label >= 0 and probabilty >= face.probabilty:
+                face.probabilty = probabilty
+                face.label = label
+                new_clusters[label].append(face.id)
+
+        return ClustersMessage(list(new_clusters.values()))

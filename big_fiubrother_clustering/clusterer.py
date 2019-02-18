@@ -13,7 +13,6 @@ class Clusterer:
 
     def analyse(self, batch):
         #TODO: Check batch size
-        
         clusterer = hdbscan.HDBSCAN(metric=self.metric, 
                                     core_dist_n_jobs=self.jobs,
                                     min_cluster_size=self.min_cluster_size,
@@ -23,7 +22,7 @@ class Clusterer:
 
         new_clusters = defaultdict(list)
 
-        for label, probabilty, face in zip(clusterer.labels_, batch.faces):
+        for label, probabilty, face in zip(clusterer.labels_, clusterer.probabilties_, batch.faces):
             if  label >= 0 and probabilty >= face.probabilty:
                 face.probabilty = probabilty
                 face.label = label
